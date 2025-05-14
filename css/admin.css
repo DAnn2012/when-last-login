@@ -16,7 +16,7 @@
 }
 
 .wll_add_ons_title, .wll_add_ons_description, .wll_add_ons_button{
-	padding: 15px;	
+	padding: 15px;
 }
 
 .wll_add_ons_description{
@@ -52,4 +52,8 @@ table.wp-list-table.striped.widefat{
 
 a {
 	text-decoration: none;
+}
+
+.wrap .wll-button-add-ons {
+	display: none;
 }
