@@ -1,6 +1,11 @@
 <?php
+/**
+ * Remove user data when uninstalled.
+ *
+ * @package when-last-login
+ */
 
-// If uninstall is not called from WordPress, exit
+// If uninstall not called from WordPress, then exit.
 if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit();
 }
@@ -8,14 +13,14 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 global $wpdb;
 
 $users_id = get_users( array(
-  'fields' => 'ID'
+	'fields' => 'ID'
 ) );
 
 foreach( $users_id as $user_id ){
-  delete_user_meta( $user_id, 'when_last_login' );
-  delete_user_meta( $user_id, 'when_last_login_count' );
-  delete_user_meta( $user_id, 'wll_consent_to_track' );
-  delete_user_meta( $user_id, 'wll_consent_to_track_date' );
+	delete_user_meta( $user_id, 'when_last_login' );
+	delete_user_meta( $user_id, 'when_last_login_count' );
+	delete_user_meta( $user_id, 'wll_consent_to_track' );
+	delete_user_meta( $user_id, 'wll_consent_to_track_date' );
 }
 
 //Delete CPT's from databse if you uninstall When Last Login and Post Meta.

@@ -1,10 +1,10 @@
 <?php
-
-/*
+/**
  * Code to support GDPR compliances, WordPress version 4.9.6+
  * @since 1.1
+ *
+ * @package when-last-login
  */
-
 
 /**
  * Return the default suggested privacy policy content.
@@ -40,7 +40,7 @@ function wll_add_suggested_privacy_content() {
 		$content = wll_get_default_privacy_content();
 		wp_add_privacy_policy_content( esc_html__( 'When Last Login', 'when-last-login' ), $content );
 	}
-	
+
 }
 add_action( 'admin_init', 'wll_add_suggested_privacy_content', 20 );
 
@@ -148,7 +148,7 @@ function plugin_user_data_eraser( $email_address, $page = 1 ) {
 			$messages[] = __( 'Your last login timestamp was unable to be removed at this time.', 'when-last-login' );
 			$items_retained = true;
 		}
-		
+
 		$deleted_when_last_login_count = delete_user_meta( $user->ID, 'when_last_login_count' );
 		if ( $deleted_when_last_login_count ) {
 			$items_removed = true;
