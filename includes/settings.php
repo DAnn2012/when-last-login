@@ -1,4 +1,9 @@
 <?php
+/**
+ * Settings page for When Last Login.
+ *
+ * @package when-last-login
+ */
 
 $tabs = array(
 	'general' => array(
@@ -23,7 +28,7 @@ $tabs = apply_filters( 'wll_settings_page_tabs', $tabs );
 	<h2 class="nav-tab-wrapper"><?php
 
 	foreach( $tabs as $key => $val ){
-		
+
 		$active = '';
 
 		if( isset( $_GET['tab'] ) && $_GET['tab'] == $key ){
@@ -39,42 +44,42 @@ $tabs = apply_filters( 'wll_settings_page_tabs', $tabs );
 	}
 
 	?>
-		
-	</h2> 
 
-	<?php 
+	</h2>
+
+	<?php
 	if( isset( $_GET['tab'] ) && $_GET['tab'] == 'add-ons' ){
 		include 'settings/add-ons.php';
 	} else {
-	?>
-	<form method='POST'><table class="form-table">
+		?>
+		<form method='POST'>
+			<table class="form-table">
 
-	<?php
-		
-		$content = array(
-			'general' => 'settings/general.php',
-			'add-ons' => 'settings/add-ons.php'
-		);
+				<?php
 
-		$content = apply_filters( 'wll_settings_page_content', $content );
+				$content = array(
+					//'general' => 'settings/general.php',
+					'add-ons' => 'settings/add-ons.php'
+				);
 
-		if( isset( $_GET['tab'] ) ){
-			$current_tab = $_GET['tab'];
-		} else {
-			$current_tab = 'general';
-		}
+				$content = apply_filters( 'wll_settings_page_content', $content );
 
-		foreach( $content as $key => $val ){
+				if( isset( $_GET['tab'] ) ){
+					$current_tab = $_GET['tab'];
+				} else {
+					$current_tab = 'general';
+				}
 
-			if( $key == $current_tab ){
-				include $val;
-			}
+				foreach( $content as $key => $val ){
 
-		}
+					if( $key == $current_tab ){
+						include $val;
+					}
 
+				}
 
-	?>	
-
-	</table></form>
+				?>
+			</table>
+		</form>
 	<?php } ?>
 </div>
