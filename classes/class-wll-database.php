@@ -27,7 +27,7 @@ class WLL_Database {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$table_name = $wpdb->prefix . 'login_records';
+		$table_name = $wpdb->prefix . 'wll_login_records';
 
 		$sql = "CREATE TABLE $table_name (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -74,7 +74,7 @@ class WLL_Database {
 
 		foreach ( $wll_records->posts as $record ) {
 			$record_inserted = $wpdb->insert(
-				$wpdb->prefix . 'login_records',
+				$wpdb->prefix . 'wll_login_records',
 				[
 					'user_id'    => $record->post_author,
 					'login_time' => strtotime( $record->post_date ),
