@@ -171,6 +171,19 @@ class WLL_Admin {
 			)
 		);
 
+		add_settings_field(
+			'delete_data',
+			__( 'Delete data on uninstall', "when-last-login" ),
+			array( $this, 'admin_checkbox_field' ),
+			'wll_settings_page_general',
+			'wll_section_general',
+			array(
+				'options' => $options,
+				'name'    => 'delete_data',
+				'label'   => __( 'Permanently delete all settings and data when uninstalling the plugin.', 'when-last-login' ),
+			)
+		);
+
 		add_settings_section( 'wll_section_tools', __( 'Tools', 'when-last-login' ), array( $this, 'wll_settings_page_tools_calback' ), 'wll_settings_page_general' );
 
 		// Adons settings.

@@ -7,7 +7,11 @@
 
 // If uninstall not called from WordPress, then exit.
 if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-    exit();
+	exit();
+}
+
+if ( 'yes' !== When_Last_Login::get_settings( 'delete_data' ) ) {
+	return;
 }
 
 global $wpdb;
