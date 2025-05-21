@@ -36,5 +36,10 @@ $delete_table = $wpdb->prefix . 'wll_login_attempts' ;
 $sql = "DROP TABLE IF EXISTS `$delete_table`";
 $wpdb->query( $sql );
 
+//Delete custom table if it exists
+$delete_table = $wpdb->prefix . 'wll_login_records' ;
+$sql = "DROP TABLE IF EXISTS `$delete_table`";
+$wpdb->query( $sql );
+
 $sqlQuery = "DELETE FROM $wpdb->options WHERE option_name LIKE 'wll%'";
 $wpdb->query($sqlQuery);
