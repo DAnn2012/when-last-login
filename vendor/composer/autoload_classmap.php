@@ -8,5 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'WLL_Admin' => $baseDir . '/classes/class-wll-admin.php',
+    'WLL_Database' => $baseDir . '/classes/class-wll-database.php',
     'When_Last_Login' => $baseDir . '/classes/class-when-last-login.php',
 );
