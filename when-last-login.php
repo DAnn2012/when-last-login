@@ -12,7 +12,7 @@
  * @package when-last-login
 */
 
-define( 'WLL_VER', '1.2.2' );
+define( 'WLL_VER', '2.0.0' );
 define( 'WLL_BASENAME', plugin_basename( __FILE__ ) );
 define( 'WLL_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WLL_PLUGIN', WP_PLUGIN_URL . '/when-last-login' );
@@ -35,13 +35,10 @@ add_filter( 'cron_schedules', function ( $schedules ) {
  */
 function wll_activate() {
 	WLL_Database::create_table();
-
-	// Add version to options
-	add_option( 'wll_version', WLL_VER, '',  'no' );
-
 	if ( ! wp_next_scheduled( 'wll_migrate_login_records_event' ) ) {
 		wp_schedule_event( time(), 'wll_migration_schedule', 'wll_migrate_login_records_event' );
 	}
+	update_option( 'wll_version', WLL_VER, '',  'no' );
 }
 
 /**
@@ -49,10 +46,6 @@ function wll_activate() {
  */
 function wll_deactivate() {
 	wp_clear_scheduled_hook( 'wll_migrate_login_records_event' );
-	delete_option( 'wll_migration_page' );
-
-	error_log( 'delete ' . print_r( When_Last_Login::get_settings( 'delete_data'), true ) );
-
 }
 
 
