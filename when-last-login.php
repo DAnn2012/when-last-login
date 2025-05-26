@@ -33,6 +33,12 @@ add_filter( 'cron_schedules', function ( $schedules ) {
 	return $schedules;
 } );
 
+add_action( 'plugins_loaded', function ( $schedules ) {
+	if ( version_compare( get_option( 'wll_version' ), WLL_VER, '<' ) ) {
+		wll_activate();
+	}
+} );
+
 /**
  * Plugin activation.
  */
