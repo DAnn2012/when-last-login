@@ -67,7 +67,6 @@ class WLL_Admin {
 				'manage_options',
 				'when-last-login-settings',
 				array( $this, 'wll_settings_callback' ),
-				'dashicons-visibility'
 			);
 		}
 
