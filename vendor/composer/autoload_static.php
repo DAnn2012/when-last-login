@@ -9,7 +9,12 @@ class ComposerStaticInit2b9acc4e1c0648fc9be0884d71aeff68
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'WLL_Admin' => __DIR__ . '/../..' . '/classes/class-wll-admin.php',
+        'WLL_Columns' => __DIR__ . '/../..' . '/classes/class-wll-columns.php',
         'WLL_Database' => __DIR__ . '/../..' . '/classes/class-wll-database.php',
+        'WLL_PMPRO' => __DIR__ . '/../..' . '/classes/class-wll-pmpro.php',
+        'WLL_Records' => __DIR__ . '/../..' . '/classes/class-wll-login-records.php',
+        'WLL_User_Registration_Login' => __DIR__ . '/../..' . '/classes/class-wll-user-registeration-login.php',
+        'WLL_Widgets' => __DIR__ . '/../..' . '/classes/class-wll-widgets.php',
         'When_Last_Login' => __DIR__ . '/../..' . '/classes/class-when-last-login.php',
     );
 

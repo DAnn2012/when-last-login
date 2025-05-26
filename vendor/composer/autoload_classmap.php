@@ -8,6 +8,11 @@ $baseDir = dirname($vendorDir);
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'WLL_Admin' => $baseDir . '/classes/class-wll-admin.php',
+    'WLL_Columns' => $baseDir . '/classes/class-wll-columns.php',
     'WLL_Database' => $baseDir . '/classes/class-wll-database.php',
+    'WLL_PMPRO' => $baseDir . '/classes/class-wll-pmpro.php',
+    'WLL_Records' => $baseDir . '/classes/class-wll-login-records.php',
+    'WLL_User_Registration_Login' => $baseDir . '/classes/class-wll-user-registeration-login.php',
+    'WLL_Widgets' => $baseDir . '/classes/class-wll-widgets.php',
     'When_Last_Login' => $baseDir . '/classes/class-when-last-login.php',
 );
