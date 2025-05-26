@@ -211,8 +211,9 @@ class WLL_Admin {
 	 */
 	public function sanitize_settings( $input ) {
 		$saved_options = When_Last_Login::get_settings();
-		if ( ! is_array( $saved_options ) ) {
-			$saved_options = array();
+
+		if ( ! isset( $_POST['wll_settings'] ) ) {
+			return $saved_options;
 		}
 
 		// Define checkbox fields you want to track:
@@ -220,7 +221,12 @@ class WLL_Admin {
 			'record_ip_address',
 			'show_all_login_records',
 			'hide_menu',
+			'delete_data',
 		);
+
+		if ( ! is_array( $saved_options ) ) {
+			$saved_options = array();
+		}
 
 		// Handle checkboxes (checked or unchecked)
 		foreach ( $checkbox_fields as $field ) {
