@@ -30,7 +30,11 @@ class WLL_Admin {
 	 */
 	public function add_admin_menu() {
 
-		$hide_menu = When_Last_Login::get_settings('hide_menu');
+		$settings  = When_Last_Login::get_settings();
+		$hide_menu = isset( $settings['hide_menu'] ) && $settings['hide_menu'] == 1 ? true : false;
+		$show = ( ! empty( $settings['show_all_login_records'] ) AND $settings['show_all_login_records'] === 1 );
+		$show_login_records = apply_filters( 'when_last_login_show_records_table', $show );
+
 
 		if ( ! $hide_menu ) { // If the setting is not enabled we add the high level menu items.
 
@@ -59,6 +63,17 @@ class WLL_Admin {
 				'admin.php?page=when-last-login-settings&tab=add-ons'
 			);
 
+			if ( $show_login_records ) {
+				add_submenu_page(
+					'when-last-login-settings',
+					esc_html__('Login Records', 'when-last-login'),
+					esc_html__('All Login Records', 'when-last-login'),
+					'manage_options',
+					'wll-records',
+					array( 'WLL_Records', 'render_page' )
+				);
+			}
+
 		} else {
 			add_submenu_page(
 				When_Last_Login::get_admin_slug(),
@@ -68,6 +83,17 @@ class WLL_Admin {
 				'when-last-login-settings',
 				array( $this, 'wll_settings_callback' ),
 			);
+
+			if ( $show_login_records ) {
+				add_submenu_page(
+					'users.php',
+					esc_html__('Login Records', 'when-last-login'),
+					esc_html__('All Login Records', 'when-last-login'),
+					'manage_options',
+					'wll-records',
+					array( 'WLL_Records', 'render_page' )
+				);
+			}
 		}
 
 		do_action( 'wll_settings_admin_menu_item' );
