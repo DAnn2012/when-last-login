@@ -32,7 +32,6 @@ class When_Last_Login {
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_js_for_notice' ) );
 		add_action( 'admin_notices', array( $this, 'update_notice' ) );
 		add_action( 'wp_ajax_wll_hide_subscription_notice', array( $this, 'wll_hide_subscription_notice' ) );
-		add_action( 'init', array( $this, 'login_record_cp' ) );
 		add_action( 'admin_head', array( $this, 'wll_settings_page_head' ) );
 		add_action( 'admin_init', array( $this, 'wll_automatically_remove_logs' ) );
 	}
@@ -152,63 +151,6 @@ class When_Last_Login {
 		if ( isset( $_GET['page'] ) && $_GET['page'] == 'when-last-login-settings' ) {
 			wp_enqueue_style( 'wll_admin_settings_styles', plugins_url( '../css/admin.css', __FILE__ ) );
 		}
-	}
-
-	/**
-	 * Register the custom post type for login records.
-	 */
-	public static function login_record_cp() {
-
-		global $show_login_records;
-
-		$settings = When_Last_Login::get_settings();
-
-		$show = ( ! empty( $settings['show_all_login_records'] ) AND $settings['show_all_login_records'] === 1 );
-
-		$show_login_records = apply_filters( 'when_last_login_show_records_table', $show );
-
-		if ( $show_login_records != true ) {
-			return;
-		}
-
-		$labels = array(
-			'name'               => __( 'Login Records', 'when-last-login' ),
-			'singular_name'      => __( 'Login Record', 'when-last-login' ),
-			'menu_name'          => __( 'Login Records', 'when-last-login' ),
-			'name_admin_bar'     => __( 'Login Record', 'when-last-login' ),
-			'add_new'            => __( 'Add New', 'when-last-login' ),
-			'add_new_item'       => __( 'Add New Login Record', 'when-last-login' ),
-			'new_item'           => __( 'New Login Record', 'when-last-login' ),
-			'edit_item'          => __( 'Edit Login Record', 'when-last-login' ),
-			'view_item'          => __( 'View Login Record', 'when-last-login' ),
-			'all_items'          => __( 'All Login Records', 'when-last-login' ),
-			'search_items'       => __( 'Search Login Records', 'when-last-login' ),
-			'parent_item_colon'  => __( 'Parent Login Records:', 'when-last-login' ),
-			'not_found'          => __( 'No login records found.', 'when-last-login' ),
-			'not_found_in_trash' => __( 'No login records found in Trash.', 'when-last-login' )
-		);
-
-		$args = array(
-			'labels'             => $labels,
-			'description'        => __( 'Description.', 'when-last-login' ),
-			'public'             => false,
-			'publicly_queryable' => false,
-			'show_ui'            => true,
-			'show_in_menu'       => 'when-last-login-settings',
-			'query_var'          => true,
-			'rewrite'            => array( 'slug' => 'when-last-login-records' ),
-			'capability_type'    => 'post',
-			'has_archive'        => true,
-			'hierarchical'       => false,
-			'menu_position'      => null,
-			'supports'           => array( 'title', 'author' ),
-			'capabilities' => array(
-			'create_posts' => false,
-			),
-			'map_meta_cap' => true,
-		);
-
-		register_post_type( 'wll_records', $args );
 	}
 
 	public function wll_settings_page_head() {
