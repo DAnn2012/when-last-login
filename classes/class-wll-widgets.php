@@ -42,7 +42,7 @@ class WLL_Widgets {
 
 	public static function admin_dashboard_widget_display() {
 
-		global $show_widget, $show_login_records;
+		global $show_widget;
 
 		if ( $show_widget != true ) {
 			return;
@@ -103,7 +103,7 @@ class WLL_Widgets {
 
 				<a href="<?php echo admin_url( 'users.php?orderby=when_last_login&order=desc' ); ?>"><?php _e( 'View All Users', 'when-last-login' ); ?></a>
 
-				<?php if ( $show_login_records == true ) { ?>
+				<?php if ( When_Last_Login::show_login_records() ) { ?>
 					<a style="float:right" href="<?php echo admin_url( 'edit.php?post_type=wll_records' ); ?>"><?php _e( 'View Login Records', 'when-last-login' ); } //end the if filter check here ?></a>
 				<?php
 
@@ -149,7 +149,7 @@ class WLL_Widgets {
 
 			<a href="<?php echo admin_url( 'users.php?orderby=when_last_login&order=desc' ); ?>"><?php esc_html_e( 'View All Users', 'when-last-login' ); ?></a>
 
-			<?php if ( $show_login_records == true ) { ?>
+			<?php if ( When_Last_Login::show_login_records() ) { ?>
 				<a style="float:right" href="<?php echo admin_url( 'edit.php?post_type=wll_records' ); ?>"><?php esc_html_e( 'View Login Records', 'when-last-login' ); } //end the if filter check here ?></a>
 			<?php
 

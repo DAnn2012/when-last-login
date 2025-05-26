@@ -62,12 +62,24 @@ class When_Last_Login {
 		}
 		return $settings;
 	}
-
+	/**
+	 * Get the admin slug for the plugin.
+	 *
+	 * @return string The admin slug.
+	 */
 	public static function get_admin_slug() {
 		if ( ! self::get_settings('hide_menu') ) {
 			return 'admin.php';
 		}
 		return 'tools.php';
+	}
+
+	/**
+	 * Show Login records.
+	 */
+	public static function show_login_records() {
+		$settings = self::get_settings('show_all_login_records');
+		return apply_filters( 'when_last_login_show_records_table', $settings );
 	}
 
 	/**

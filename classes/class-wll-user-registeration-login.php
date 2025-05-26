@@ -23,7 +23,6 @@ class WLL_User_Registration_Login {
 
 	public static function last_login( $user_login, $users ) {
 
-		global $show_login_records;
 		global $wpdb;
 
 		$record_login = apply_filters( 'wll_record_login', true, $users, $user_login );
@@ -58,7 +57,7 @@ class WLL_User_Registration_Login {
 			update_user_meta( $users->ID, 'wll_user_ip_address', $ip_address );
 		}
 
-		if ( $show_login_records == true ) {
+		if ( When_Last_Login::show_login_records() ) {
 
 			$wpdb->insert(
 				$wpdb->prefix . 'wll_login_records',
