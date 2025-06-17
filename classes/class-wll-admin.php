@@ -276,12 +276,12 @@ class WLL_Admin {
 				<?php
 					$old_records_message = esc_html__( 'Are you sure you want to remove all records older than 3 months?', 'when-last-login' );
 					$all_records_message = esc_html__( 'Are you sure you want to remove all login records?', 'when-last-login' );
-					$all_ip_message = esc_html__( 'Are you sure you want to remove all IP addresses?', 'when-last-login' );
+					$all_ip_message      = esc_html__( 'Are you sure you want to remove all IP addresses?', 'when-last-login' );
 
 
-					$remove_records_nonce = wp_create_nonce( 'wll_remove_records_nonce' );
+					$remove_records_nonce     = wp_create_nonce( 'wll_remove_records_nonce' );
 					$remove_all_records_nonce = wp_create_nonce( 'wll_remove_all_records_nonce' );
-					$remove_ip_nonce = wp_create_nonce( 'wll_remove_ip_nonce' );
+					$remove_ip_nonce          = wp_create_nonce( 'wll_remove_ip_nonce' );
 				?>
 				<tr>
 					<th><?php esc_html_e( 'Clear old logs', 'when-last-login' ); ?></th>
