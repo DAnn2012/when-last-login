@@ -26,18 +26,17 @@ class WLL_Admin {
 	 * Add admin menu.
 	 *
 	 * If the "hide_menu" setting is enabled we don't add the high level menu items.
-	 *
 	 */
 	public function add_admin_menu() {
 
 		$settings  = When_Last_Login::get_settings();
-		$hide_menu = isset( $settings['hide_menu'] ) && $settings['hide_menu'] == 1 ? true : false;
+		$hide_menu = isset( $settings['hide_menu'] ) && 1 === $settings['hide_menu'] ? true : false;
 
 		if ( ! $hide_menu ) { // If the setting is not enabled we add the high level menu items.
 
 			add_menu_page(
-				__('When Last Login', 'when-last-login'),
-				esc_html__('When Last Login', 'when-last-login'),
+				__( 'When Last Login', 'when-last-login' ),
+				esc_html__( 'When Last Login', 'when-last-login' ),
 				'manage_options',
 				'when-last-login-settings',
 				array( $this, 'wll_settings_callback' ),
@@ -46,16 +45,17 @@ class WLL_Admin {
 
 			add_submenu_page(
 				'when-last-login-settings',
-				esc_html__('Settings', 'when-last-login'),
-				__('Settings', 'when-last-login'),
-				'manage_options', 'when-last-login-settings',
+				esc_html__( 'Settings', 'when-last-login' ),
+				__( 'Settings', 'when-last-login' ),
+				'manage_options',
+				'when-last-login-settings',
 				array( $this, 'wll_settings_callback' )
 			);
 
 			add_submenu_page(
 				'when-last-login-settings',
-				esc_html__('Extensions', 'when-last-login'),
-				__('Extensions', 'when-last-login'),
+				esc_html__( 'Extensions', 'when-last-login' ),
+				__( 'Extensions', 'when-last-login' ),
 				'manage_options',
 				'admin.php?page=when-last-login-settings&tab=add-ons'
 			);
@@ -63,19 +63,18 @@ class WLL_Admin {
 			if ( When_Last_Login::show_login_records() ) {
 				add_submenu_page(
 					'when-last-login-settings',
-					esc_html__('Login Records', 'when-last-login'),
-					esc_html__('All Login Records', 'when-last-login'),
+					esc_html__( 'Login Records', 'when-last-login' ),
+					esc_html__( 'All Login Records', 'when-last-login' ),
 					'manage_options',
 					'wll-records',
 					array( 'WLL_Records', 'render_page' )
 				);
 			}
-
 		} else {
 			add_submenu_page(
 				When_Last_Login::get_admin_slug(),
-				__('When Last Login', 'when-last-login'),
-				esc_html__('When Last Login', 'when-last-login'),
+				__( 'When Last Login', 'when-last-login' ),
+				esc_html__( 'When Last Login', 'when-last-login' ),
 				'manage_options',
 				'when-last-login-settings',
 				array( $this, 'wll_settings_callback' ),
@@ -84,8 +83,8 @@ class WLL_Admin {
 			if ( When_Last_Login::show_login_records() ) {
 				add_submenu_page(
 					'users.php',
-					esc_html__('Login Records', 'when-last-login'),
-					esc_html__('All Login Records', 'when-last-login'),
+					esc_html__( 'Login Records', 'when-last-login' ),
+					esc_html__( 'All Login Records', 'when-last-login' ),
 					'manage_options',
 					'wll-records',
 					array( 'WLL_Records', 'render_page' )
@@ -103,20 +102,20 @@ class WLL_Admin {
 		$tabs = array(
 			'general' => array(
 				'title' => __( 'General', 'when-last-login' ),
-				'icon' => ''
+				'icon'  => '',
 			),
 			'add-ons' => array(
 				'title' => __( 'Add-ons', 'when-last-login' ),
-				'icon' => ''
-			)
+				'icon'  => '',
+			),
 		);
 
-		$tabs = apply_filters( 'wll_settings_page_tabs', $tabs );
+		$tabs        = apply_filters( 'wll_settings_page_tabs', $tabs );
 		$current_tab = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? $_GET['tab'] : array_key_first( $tabs );
 		?>
 		<div class="wrap">
 			<div id="wll-setting-header">
-				<img src="<?php echo WLL_PLUGIN . '/includes/images/whenlastlogin.png'; ?>" width="300px" height="auto" style="margin-top:0%;"/><span style="position:relative;top:-15px;"><?php echo 'v' . WLL_VER; ?></span>
+				<img src="<?php echo esc_attr( WLL_PLUGIN ) . '/includes/images/whenlastlogin.png'; ?>" width="300px" height="auto" style="margin-top:0%;"/><span style="position:relative;top:-15px;"><?php echo 'v' . esc_html( WLL_VER ); ?></span>
 			</div>
 			<form method="post" action="options.php">
 				<nav class="nav-tab-wrapper">
@@ -124,7 +123,8 @@ class WLL_Admin {
 						$current = $key === $current_tab ? ' nav-tab-active' : '';
 						$url = add_query_arg( array( 'page' => 'when-last-login-settings', 'tab' => $key ), admin_url( When_Last_Login::get_admin_slug() ) );
 						echo "<a class=\"nav-tab{$current}\" href=\"{$url}\">{$tab['title']}</a>";
-					endforeach; ?>
+					endforeach;
+					?>
 				</nav>
 
 				<?php
@@ -137,6 +137,9 @@ class WLL_Admin {
 		<?php
 	}
 
+	/**
+	 * Admin Notices.
+	 */
 	public function wll_admin_notices() {
 		if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) {
 			add_settings_error( 'wll_settings', 'wll_settings_updated', __( 'Settings saved.', 'when-last-login' ), 'updated' );
@@ -149,14 +152,14 @@ class WLL_Admin {
 	 */
 	public function add_admin_settings() {
 		$options = When_Last_Login::get_settings();
-		// Register single option array
+		// Register single option array.
 		register_setting( 'wll_settings_group', 'wll_settings', array( $this, 'sanitize_settings' ) );
 
 		// General settings.
 		add_settings_section( 'wll_section_general', __( 'Options', 'when-last-login' ), '', 'wll_settings_page_general' );
 		add_settings_field(
 			'record_ip_address',
-			__( "Record user's IP address", "when-last-login" ),
+			__( "Record user's IP address", 'when-last-login' ),
 			array( $this, 'admin_checkbox_field' ),
 			'wll_settings_page_general',
 			'wll_section_general',
@@ -169,7 +172,7 @@ class WLL_Admin {
 
 		add_settings_field(
 			'show_all_login_records',
-			__( 'Enable "All Login Records"', "when-last-login" ),
+			__( 'Enable "All Login Records"', 'when-last-login' ),
 			array( $this, 'admin_checkbox_field' ),
 			'wll_settings_page_general',
 			'wll_section_general',
@@ -182,7 +185,7 @@ class WLL_Admin {
 
 		add_settings_field(
 			'hide_menu',
-			__( 'Top Level Menu', "when-last-login" ),
+			__( 'Top Level Menu', 'when-last-login' ),
 			array( $this, 'admin_checkbox_field' ),
 			'wll_settings_page_general',
 			'wll_section_general',
@@ -195,7 +198,7 @@ class WLL_Admin {
 
 		add_settings_field(
 			'delete_data',
-			__( 'Delete data on uninstall', "when-last-login" ),
+			__( 'Delete data on uninstall', 'when-last-login' ),
 			array( $this, 'admin_checkbox_field' ),
 			'wll_settings_page_general',
 			'wll_section_general',
@@ -210,7 +213,6 @@ class WLL_Admin {
 
 		// Adons settings.
 		add_settings_section( 'wll_section_add-ons', '', array( $this, 'wll_settings_page_addons_calback' ), 'wll_settings_page_add-ons' );
-
 	}
 
 	/**
@@ -239,7 +241,7 @@ class WLL_Admin {
 			return $saved_options;
 		}
 
-		// Define checkbox fields you want to track:
+		// Define checkbox fields you want to track.
 		$checkbox_fields = array(
 			'record_ip_address',
 			'show_all_login_records',
@@ -251,7 +253,7 @@ class WLL_Admin {
 			$saved_options = array();
 		}
 
-		// Handle checkboxes (checked or unchecked)
+		// Handle checkboxes (checked or unchecked).
 		foreach ( $checkbox_fields as $field ) {
 			$saved_options[ $field ] = isset( $input[ $field ] ) ? 1 : 0;
 		}
