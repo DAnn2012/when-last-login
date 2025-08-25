@@ -111,7 +111,7 @@ class WLL_Admin {
 		);
 
 		$tabs        = apply_filters( 'wll_settings_page_tabs', $tabs );
-		$current_tab = isset( $_GET['tab'] ) && isset( $tabs[ $_GET['tab'] ] ) ? $_GET['tab'] : array_key_first( $tabs );
+		$current_tab = isset( $_GET['tab'] ) && isset( $tabs[ wp_unslash( $_GET['tab'] ) ] ) ? wp_unslash( $_GET['tab'] ) : array_key_first( $tabs );
 		?>
 		<div class="wrap">
 			<div id="wll-setting-header">
@@ -119,9 +119,16 @@ class WLL_Admin {
 			</div>
 			<form method="post" action="options.php">
 				<nav class="nav-tab-wrapper">
-					<?php foreach ( $tabs as $key => $tab ) :
+					<?php
+					foreach ( $tabs as $key => $tab ) :
 						$current = $key === $current_tab ? ' nav-tab-active' : '';
-						$url = add_query_arg( array( 'page' => 'when-last-login-settings', 'tab' => $key ), admin_url( When_Last_Login::get_admin_slug() ) );
+						$url     = add_query_arg(
+							array(
+								'page' => 'when-last-login-settings',
+								'tab'  => $key,
+							),
+							admin_url( When_Last_Login::get_admin_slug() ),
+						);
 						echo "<a class=\"nav-tab{$current}\" href=\"{$url}\">{$tab['title']}</a>";
 					endforeach;
 					?>
@@ -141,7 +148,7 @@ class WLL_Admin {
 	 * Admin Notices.
 	 */
 	public function wll_admin_notices() {
-		if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) {
+		if ( isset( $_GET['settings-updated'] ) && wp_unslash( $_GET['settings-updated'] ) ) {
 			add_settings_error( 'wll_settings', 'wll_settings_updated', __( 'Settings saved.', 'when-last-login' ), 'updated' );
 		}
 		settings_errors( 'wll_settings' );
@@ -179,7 +186,7 @@ class WLL_Admin {
 			array(
 				'options' => $options,
 				'name'    => 'show_all_login_records',
-				'label'   => __( 'Please enable this option if using the', 'when-last-login' ) . " <a href='https://yoohooplugins.com/plugins/when-last-login-user-statistics/' target='_blank'><strong>" . esc_html( 'When Last Login - User Statistics Add On', 'when-last-login' ) . "</strong></a>",
+				'label'   => __( 'Please enable this option if using the', 'when-last-login' ) . ' <a href="https://yoohooplugins.com/plugins/when-last-login-user-statistics/" target="_blank"><strong>"' . esc_html__( 'When Last Login - User Statistics Add On', 'when-last-login' ) . '</strong>"</a>',
 			)
 		);
 
@@ -221,18 +228,21 @@ class WLL_Admin {
 	 * @param array $args Field arguments.
 	 */
 	public function admin_checkbox_field( $args ) {
-		$value = isset( $args['options'][ $args['name'] ] ) ? $args['options'][ $args['name'] ] : '';
-		$checked = in_array( $value, array( 'yes', 1 ) ) ? 'checked' : '';
+		$value   = isset( $args['options'][ $args['name'] ] ) ? $args['options'][ $args['name'] ] : '';
+		$checked = in_array( $value, array( 'yes', 1 ), true ) ? 'checked' : '';
 		?>
 		<label>
-			<input type="checkbox" name="wll_settings[<?php echo esc_attr( $args['name'] ); ?>]" value="yes" <?php echo $checked; ?> />
-			<?php echo $args['label']; ?>
+			<input type="checkbox" name="wll_settings[<?php echo esc_attr( $args['name'] ); ?>]" value="yes" <?php echo esc_attr( $checked ); ?> />
+			<?php echo $args['label']; // phpcs:ignore. ?>
 		</label>
 		<?php
 	}
 
 	/**
 	 * Sanitize settings callback
+	 *
+	 * @param array $input Input values.
+	 * @return array Sanitized values.
 	 */
 	public function sanitize_settings( $input ) {
 		$saved_options = When_Last_Login::get_settings();
@@ -258,9 +268,9 @@ class WLL_Admin {
 			$saved_options[ $field ] = isset( $input[ $field ] ) ? 1 : 0;
 		}
 
-		// Handle other fields dynamically (text fields etc.)
+		// Handle other fields dynamically (text fields etc.).
 		foreach ( $input as $key => $value ) {
-			if ( ! in_array( $key, $checkbox_fields ) ) {
+			if ( ! in_array( $key, $checkbox_fields, true ) ) {
 				$saved_options[ $key ] = sanitize_text_field( $value );
 			}
 		}
@@ -279,8 +289,7 @@ class WLL_Admin {
 					$old_records_message = esc_html__( 'Are you sure you want to remove all records older than 3 months?', 'when-last-login' );
 					$all_records_message = esc_html__( 'Are you sure you want to remove all login records?', 'when-last-login' );
 					$all_ip_message      = esc_html__( 'Are you sure you want to remove all IP addresses?', 'when-last-login' );
-
-
+					// Nonces.
 					$remove_records_nonce     = wp_create_nonce( 'wll_remove_records_nonce' );
 					$remove_all_records_nonce = wp_create_nonce( 'wll_remove_all_records_nonce' );
 					$remove_ip_nonce          = wp_create_nonce( 'wll_remove_ip_nonce' );
@@ -301,22 +310,49 @@ class WLL_Admin {
 				</tr>
 			</table>
 
+			<?php
+
+			$old_recordes_url = add_query_arg(
+				array(
+					'remove_wll_records'       => '1',
+					'wll_remove_records_nonce' => $remove_records_nonce,
+				),
+				admin_url( 'admin.php?page=when-last-login-settings' ),
+			);
+
+			$all_records_url = add_query_arg(
+				array(
+					'remove_all_wll_records'       => '1',
+					'wll_remove_all_records_nonce' => $remove_all_records_nonce,
+				),
+				admin_url( 'admin.php?page=when-last-login-settings' ),
+			);
+
+			$all_ip_url = add_query_arg(
+				array(
+					'remove_wll_ip_addresses' => '1',
+					'wll_remove_ip_nonce'     => $remove_ip_nonce,
+				),
+				admin_url( 'admin.php?page=when-last-login-settings' )
+			);
+			?>
+
 			<script>
 				function wll_remove_old_records(){
-					if( window.confirm('<?php echo $old_records_message; ?>')) {
-						window.location.href = "<?php echo add_query_arg( array( 'remove_wll_records' => '1', 'wll_remove_records_nonce' => $remove_records_nonce ), admin_url( 'admin.php?page=when-last-login-settings' ) ); ?>";
+					if( window.confirm('<?php echo esc_js( $old_records_message ); ?>')) {
+						window.location.href = "<?php echo esc_js( esc_url( $old_recordes_url ) ); ?>";
 					}
 				}
 
 				function wll_remove_all_records(){
-					if( window.confirm('<?php echo $all_records_message; ?>')) {
-						window.location.href = "<?php echo add_query_arg( array( 'remove_all_wll_records' => '1', 'wll_remove_all_records_nonce' => $remove_all_records_nonce ), admin_url( 'admin.php?page=when-last-login-settings' ) ); ?>";
+					if( window.confirm('<?php echo esc_js( $all_records_message ); ?>')) {
+						window.location.href = "<?php echo esc_js( esc_url( $all_records_url ) ); ?>";
 					}
 				}
 
 				function wll_remove_all_ips(){
-					if( window.confirm('<?php echo $all_ip_message; ?>')) {
-						window.location.href = "<?php echo add_query_arg( array( 'remove_wll_ip_addresses' => '1', 'wll_remove_ip_nonce' => $remove_ip_nonce ), admin_url( 'admin.php?page=when-last-login-settings' ) ); ?>";
+					if( window.confirm('<?php echo esc_js( $all_ip_message ); ?>')) {
+						window.location.href = "<?php echo esc_js( esc_url( $all_ip_url ) ); ?>";
 					}
 				}
 			</script>
@@ -324,34 +360,28 @@ class WLL_Admin {
 		<?php
 	}
 
+	/**
+	 * Add-ons callback.
+	 */
 	public function wll_settings_page_addons_calback() {
 		$content = get_transient( 'when_last_login_add_ons_page' );
 
-		if ( false === $content || $content == '' ) {
-
-			$url = 'https://yoohooplugins.com/api/add-ons-when-last-login/v1/products.php';
-
+		if ( false === $content || '' === $content ) {
+			$url             = 'https://yoohooplugins.com/api/add-ons-when-last-login/v1/products.php';
 			$add_ons_request = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
 
 			if ( ! is_wp_error( $add_ons_request ) ) {
-
 				if ( isset( $add_ons_request['body'] ) && strlen( $add_ons_request['body'] ) > 0 ) {
 
 					$content = wp_remote_retrieve_body( $add_ons_request );
 
 					set_transient( 'when_last_login_add_ons_page', $content, 3600 );
-
 				}
-
 			} else {
 
 				$content = '<div class="error"><p>' . __( 'An error occurred while retrieving the extensions list from the server. Please try again later.', 'when-last-login' ) . '</div>';
-
 			}
-
 		}
-
 		echo $content;
 	}
-
 }
